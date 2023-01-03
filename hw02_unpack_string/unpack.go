@@ -11,7 +11,6 @@ var ErrInvalidString = errors.New("invalid string")
 func Unpack(str string) (string, error) {
 	input := []rune(str)
 	output := []string{}
-	var outputError error
 	var symbol string
 
 	for i := 0; i < len(input); i++ {
@@ -53,5 +52,5 @@ func Unpack(str string) (string, error) {
 		symbol = ""
 	}
 
-	return strings.Join(output, ""), outputError
+	return strings.Join(output, ""), nil
 }
