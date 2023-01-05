@@ -61,7 +61,7 @@ func (l *list) PushBack(v interface{}) *ListItem {
 		item.Prev = &l.tail
 	}
 
-	l.tail = item // после этого присваивания item.Prev измененятеся с последенего значения в списке (10) на себя самого (20, 30)
+	l.tail = item // после этого присваивания item.Prev изменяется с последнего значения в списке (10) на себя самого (20, 30) а так же
 	l.length++
 	return &item
 }
