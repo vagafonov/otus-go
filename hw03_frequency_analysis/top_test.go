@@ -43,6 +43,11 @@ var text = `Как видите, он  спускается  по  лестни�
 	посидеть у огня и послушать какую-нибудь интересную сказку.
 		В этот вечер...`
 
+var textLatin = "one! one. one, one= one@ two# two% two two three three three one-thousand"
+
+var textLatinWithSpecialSymbols = "one!\none.\tone,\vone=\rone@\ftwo# two% " +
+	"two two three three three one-thousand \t \t \t \n\n\n"
+
 func TestTop10(t *testing.T) {
 	t.Run("no words in empty string", func(t *testing.T) {
 		require.Len(t, Top10(""), 0)
@@ -78,5 +83,29 @@ func TestTop10(t *testing.T) {
 			}
 			require.Equal(t, expected, Top10(text))
 		}
+	})
+}
+
+func TestLatin(t *testing.T) {
+	t.Run("latin text test", func(t *testing.T) {
+		expected := []string{
+			"one",
+			"two",
+			"three",
+			"one-thousand",
+		}
+		require.Equal(t, expected, Top10(textLatin))
+	})
+}
+
+func TestLatinWithSpecialWhitespaces(t *testing.T) {
+	t.Run("latin text with special white spaces symbols test", func(t *testing.T) {
+		expected := []string{
+			"one",
+			"two",
+			"three",
+			"one-thousand",
+		}
+		require.Equal(t, expected, Top10(textLatinWithSpecialSymbols))
 	})
 }
