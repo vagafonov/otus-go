@@ -2,7 +2,12 @@ package hw04lrucache
 
 type List interface {
 	Len() int
-	Dump() []interface{} //TODO ? Почему нельзя указать метод для структуры которого нет в интерфейсе. Возникает ошибка l.Dump undefined (type List has no field or method Dump) ?
+	/*
+			TODO ?
+			Почему нельзя указать метод для структуры которого нет в интерфейсе.
+		 	Возникает ошибка l.Dump undefined (type List has no field or method Dump) ?
+	*/
+	Dump() []interface{}
 	Front() *ListItem
 	Back() *ListItem
 	PushFront(v interface{}) *ListItem
@@ -27,12 +32,12 @@ func (l list) Len() int {
 	return l.length
 }
 
-// Front Первый элемент списка
+// Front Первый элемент списка.
 func (l list) Front() *ListItem {
 	return l.head
 }
 
-// Back Последний элемент списка
+// Back Последний элемент списка.
 func (l list) Back() *ListItem {
 	return l.tail
 }
@@ -76,16 +81,18 @@ func (l *list) PushBack(v interface{}) *ListItem {
 }
 
 func (l *list) Remove(i *ListItem) {
-
+	switch {
 	// Удаление не первого и не последнего элемента
-	if i.Prev != nil && i.Next != nil {
+	case i.Prev != nil && i.Next != nil:
 		i.Prev.Next = i.Next
 		i.Next.Prev = i.Prev
-	} else if i.Prev == nil { // Удаление первого элемента
+	// Удаление первого элемента
+	case i.Prev == nil:
 		i.Next.Prev = nil
 		// TODO ? Мало удалить сам элемент (i = nil) кроме этого нужно удалить все сылки на него l.head, i.Next.Prev ?
 		l.head = i.Next
-	} else if i.Next == nil { // Удаление последнего элемента
+	// Удаление последнего элемента
+	case i.Next == nil:
 		i.Prev.Next = nil
 		// TODO ? Мало удалить сам элемент (i = nil) кроме этого нужно удалить все сылки на него l.head, i.Next.Prev ?
 		l.tail = i.Prev
