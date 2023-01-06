@@ -87,15 +87,17 @@ func (l *list) Remove(i *ListItem) {
 		i.Prev.Next = i.Next
 		i.Next.Prev = i.Prev
 	// Удаление первого элемента
-	case i.Prev == nil:
+	case i.Prev == nil && i.Next != nil:
 		i.Next.Prev = nil
 		// TODO ? Мало удалить сам элемент (i = nil) кроме этого нужно удалить все сылки на него l.head, i.Next.Prev ?
 		l.head = i.Next
 	// Удаление последнего элемента
-	case i.Next == nil:
+	case i.Next == nil && i.Prev != nil:
 		i.Prev.Next = nil
 		// TODO ? Мало удалить сам элемент (i = nil) кроме этого нужно удалить все сылки на него l.head, i.Next.Prev ?
 		l.tail = i.Prev
+	default:
+		i = nil
 	}
 
 	i = nil
@@ -115,10 +117,13 @@ func (l *list) Dump() []interface{} {
 func (l *list) MoveToFront(i *ListItem) {
 	// Перемещение последнего в конец
 	if i.Next == nil {
-		i.Prev.Next = nil
-		i.Prev = nil
-		i.Next = l.head
-		l.head = i
+		// Последний элемент в списке не один
+		if i.Prev != nil {
+			i.Prev.Next = nil
+			i.Prev = nil
+			i.Next = l.head
+			l.head = i
+		}
 	}
 	// Перемещение первого в начало бессмысленно
 }

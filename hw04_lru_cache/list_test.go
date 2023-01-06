@@ -64,21 +64,6 @@ func TestList(t *testing.T) {
 		require.Equal(t, 30, l.Back().Value)
 	})
 
-	t.Run("remove last", func(t *testing.T) {
-		l := NewList()
-
-		l.PushFront(10) // [10]
-		l.PushBack(20)  // [10, 20]
-		l.PushBack(30)  // [10, 20, 30]
-
-		last := l.Back() // 30
-		l.Remove(last)   // [10, 20]
-
-		require.Equal(t, 2, l.Len())
-		require.Equal(t, 10, l.Front().Value)
-		require.Equal(t, 20, l.Back().Value)
-	})
-
 	t.Run("remove last of two", func(t *testing.T) {
 		l := NewList()
 
@@ -103,6 +88,21 @@ func TestList(t *testing.T) {
 
 		require.Equal(t, 1, l.Len())
 		require.Equal(t, 20, l.Back().Value)
+	})
+
+	t.Run("remove all", func(t *testing.T) {
+		l := NewList()
+
+		l.PushFront(10) // [10]
+		l.PushBack(20)  // [10, 20]
+
+		first := l.Front() // 10
+		l.Remove(first)    // [20]
+
+		last := l.Back() // 20
+		l.Remove(last)   // []
+
+		require.Equal(t, 0, l.Len())
 	})
 
 	t.Run("only pushes front", func(t *testing.T) {
@@ -131,7 +131,7 @@ func TestList(t *testing.T) {
 		require.Equal(t, 30, l.Front().Next.Next.Value)
 	})
 
-	t.Run("pushe one", func(t *testing.T) {
+	t.Run("push one", func(t *testing.T) {
 		l := NewList()
 
 		l.PushFront(10) // [10]
@@ -141,11 +141,19 @@ func TestList(t *testing.T) {
 		require.Equal(t, 10, l.Back().Value)
 	})
 
-	t.Run("dump", func(t *testing.T) {
+	t.Run("move one to top", func(t *testing.T) {
 		l := NewList()
 
 		l.PushFront(10) // [10]
+		l.MoveToFront(l.Back())
 
+		require.Equal(t, 1, l.Len())
+		require.Equal(t, 10, l.Front().Value)
+	})
+
+	t.Run("dump", func(t *testing.T) {
+		l := NewList()
+		l.PushFront(10) // [10]
 		require.Equal(t, append(make([]interface{}, 0), 10), l.Dump())
 	})
 }
