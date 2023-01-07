@@ -150,10 +150,4 @@ func TestList(t *testing.T) {
 		require.Equal(t, 1, l.Len())
 		require.Equal(t, 10, l.Front().Value)
 	})
-
-	t.Run("dump", func(t *testing.T) {
-		l := NewList()
-		l.PushFront(10) // [10]
-		require.Equal(t, append(make([]interface{}, 0), 10), l.Dump())
-	})
 }

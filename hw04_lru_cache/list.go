@@ -2,12 +2,6 @@ package hw04lrucache
 
 type List interface {
 	Len() int
-	/*
-			TODO ?
-			Почему нельзя указать метод для структуры которого нет в интерфейсе.
-		 	Возникает ошибка l.Dump undefined (type List has no field or method Dump) ?
-	*/
-	Dump() []interface{}
 	Front() *ListItem
 	Back() *ListItem
 	PushFront(v interface{}) *ListItem
@@ -102,16 +96,6 @@ func (l *list) Remove(i *ListItem) {
 
 	i = nil
 	l.length--
-}
-
-func (l *list) Dump() []interface{} {
-	i := l.Front()
-	res := make([]interface{}, 0)
-	for i != nil {
-		res = append(res, i.Value)
-		i = i.Next
-	}
-	return res
 }
 
 func (l *list) MoveToFront(i *ListItem) {
