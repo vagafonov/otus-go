@@ -24,9 +24,8 @@ func Run(tasks []Task, n, m int) error {
 	var er error
 
 	for i := 0; i < n; i++ {
-		go func(i int) {
+		go func() {
 			defer wg.Done()
-			//fmt.Println("Gorutine", i, "starting")
 			for task := range ch {
 				taskResult := task()
 				if taskResult != nil {
@@ -42,13 +41,11 @@ func Run(tasks []Task, n, m int) error {
 							return
 						}
 					}
-
 				}
 			}
-		}(i)
+		}()
 	}
 
 	wg.Wait()
-	//fmt.Println("Errors count:", errorsCount, "Error type", er)
 	return er
 }
