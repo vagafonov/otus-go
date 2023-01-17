@@ -56,7 +56,6 @@ func Run(tasks []Task, n, m int) error {
 				}
 			}
 			fmt.Println("Gorutine", i, "exit. Empty tasks")
-			return
 		}(i)
 	}
 
