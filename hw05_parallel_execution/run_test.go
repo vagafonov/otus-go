@@ -87,4 +87,11 @@ func TestRun(t *testing.T) {
 		require.Nil(t, err)
 		require.Equal(t, runTasksCount, int32(tasksCount))
 	})
+
+	t.Run("ignore errors", func(t *testing.T) {
+		tasksCount := 50
+		tasks := make([]Task, 0, tasksCount)
+		err := Run(tasks, 0, 0)
+		require.EqualError(t, err, "invalid worker number")
+	})
 }
