@@ -43,6 +43,10 @@ func Run(tasks []Task, n, m int) error {
 						er = ErrErrorsLimitExceeded
 						mu.Unlock()
 						fmt.Println("Gorutine", i, "exit")
+						_, ok := <-ch
+						if !ok {
+							close(ch)
+						}
 						return
 					}
 				}
