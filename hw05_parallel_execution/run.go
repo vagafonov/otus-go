@@ -16,17 +16,20 @@ func Run(tasks []Task, n, m int) error {
 		return errors.New("invalid worker number")
 	}
 
-	ch := make(chan Task, len(tasks))
-	for _, val := range tasks {
-		ch <- val
-	}
-	close(ch)
-
 	wg := sync.WaitGroup{}
 	mu := sync.Mutex{}
 	errorsCount := 0
 	wg.Add(n)
 	var er error
+
+	ch := make(chan Task)
+
+	go func() {
+		defer close(ch)
+		for _, val := range tasks {
+			ch <- val
+		}
+	}()
 
 	for i := 0; i < n; i++ {
 		go func(i int) {
