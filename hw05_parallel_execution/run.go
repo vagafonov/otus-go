@@ -36,13 +36,11 @@ func Run(tasks []Task, n, m int) error {
 			fmt.Println("Gorutine", i, "start")
 
 			defer wg.Done()
+			mu.Lock()
 			for task := range ch {
 				if m > 0 {
-					mu.Lock()
 					errorsCountSafe := errorsCount
-					mu.Unlock()
 					if errorsCountSafe >= m {
-						mu.Lock()
 						er = ErrErrorsLimitExceeded
 						mu.Unlock()
 						fmt.Println("Gorutine", i, "exit")
@@ -57,11 +55,10 @@ func Run(tasks []Task, n, m int) error {
 				fmt.Println("Gorutine", i, "handle task")
 				taskResult := task()
 				if taskResult != nil {
-					mu.Lock()
 					errorsCount++
-					mu.Unlock()
 				}
 			}
+			mu.Unlock()
 			fmt.Println("Gorutine", i, "exit. Empty tasks")
 		}(i)
 	}
