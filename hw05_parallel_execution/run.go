@@ -18,7 +18,7 @@ func Run(tasks []Task, n, m int) error {
 	}
 
 	wg := sync.WaitGroup{}
-	var errorsCount int32 = 0
+	var errorsCount int32
 	wg.Add(n)
 	var er error
 
@@ -37,7 +37,6 @@ func Run(tasks []Task, n, m int) error {
 
 			defer wg.Done()
 			for task := range ch {
-
 				if m > 0 {
 					if atomic.LoadInt32(&errorsCount) >= int32(m) {
 						er = ErrErrorsLimitExceeded
@@ -55,7 +54,6 @@ func Run(tasks []Task, n, m int) error {
 				if taskResult != nil {
 					atomic.AddInt32(&errorsCount, 1)
 				}
-
 			}
 			fmt.Println("Gorutine", i, "exit. Empty tasks")
 		}(i)
