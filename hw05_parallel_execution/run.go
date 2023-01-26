@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"sync"
+	"sync/atomic"
 )
 
 var ErrErrorsLimitExceeded = errors.New("errors limit exceeded")
@@ -17,8 +18,7 @@ func Run(tasks []Task, n, m int) error {
 	}
 
 	wg := sync.WaitGroup{}
-	mu := sync.Mutex{}
-	errorsCount := 0
+	var errorsCount int32 = 0
 	wg.Add(n)
 	var er error
 
@@ -37,12 +37,10 @@ func Run(tasks []Task, n, m int) error {
 
 			defer wg.Done()
 			for task := range ch {
-				mu.Lock()
+
 				if m > 0 {
-					errorsCountSafe := errorsCount
-					if errorsCountSafe >= m {
+					if atomic.LoadInt32(&errorsCount) >= int32(m) {
 						er = ErrErrorsLimitExceeded
-						mu.Unlock()
 						fmt.Println("Gorutine", i, "exit")
 						_, ok := <-ch
 						if !ok {
@@ -55,9 +53,9 @@ func Run(tasks []Task, n, m int) error {
 				fmt.Println("Gorutine", i, "handle task")
 				taskResult := task()
 				if taskResult != nil {
-					errorsCount++
+					atomic.AddInt32(&errorsCount, 1)
 				}
-				mu.Unlock()
+
 			}
 			fmt.Println("Gorutine", i, "exit. Empty tasks")
 		}(i)
