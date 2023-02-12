@@ -41,29 +41,24 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 		limit = fStat.Size()
 	}
 
-	_, err := inputFile.Seek(offset, 0)
+	_, err := inputFile.Seek(offset, io.SeekStart)
 	if err != nil {
 		return err
 	}
 
-	outFile, _ := os.Create(toPath)
-	var count int64 = 1
-	bytes := 1
-	bar := pb.StartNew(int(limit) / bytes)
+	outFile, err := os.Create(toPath)
+	if err != nil {
+		return err
+	}
 
-	for {
-		if count > limit {
-			break
-		}
-
-		read, err := io.CopyN(outFile, inputFile, int64(bytes))
-		count += read
-		if err != nil {
-			break
-		}
-		bar.Increment()
+	reader := io.LimitReader(inputFile, limit)
+	bar := pb.Full.Start64(limit)
+	barReader := bar.NewProxyReader(reader)
+	_, err = io.Copy(outFile, barReader)
+	if err != nil {
+		return err
 	}
 	bar.Finish()
 
-	return errors.New("Done")
+	return nil
 }
