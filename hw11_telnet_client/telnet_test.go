@@ -43,6 +43,9 @@ func TestTelnetClient(t *testing.T) {
 		}()
 
 		go func() {
+
+			//time.Sleep(1 * time.Second)
+
 			defer wg.Done()
 
 			conn, err := l.Accept()
